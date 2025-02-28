@@ -1,3 +1,13 @@
+/* Global Styles */
+body {
+  background: linear-gradient(135deg, #000000, #1a001a);
+  font-size: 1.125rem;
+  font-family: 'Helvetica', sans-serif;
+  color: #ffffff;
+  margin: 0;
+  padding: 0;
+}
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -12,58 +22,86 @@
 .title {
   font-size: 2.5rem;
   margin-bottom: 0.5rem;
+  color: #ffffff;
+}
+
+/* Title animation classes */
+.title.normal {
+  opacity: 1;
+}
+.title.fadeOut {
+  animation: fadeOutAnimation 0.5s forwards;
+}
+.title.fadeIn {
+  animation: fadeInAnimation 0.5s forwards;
+}
+
+@keyframes fadeOutAnimation {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+@keyframes fadeInAnimation {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .intro {
-  font-size: 1.25rem;
-  color: #666;
+  font-size: 1.5rem;
+  color: #cccccc;
+}
+
+/* Default fade-in section: occupies at least one full viewport */
+.fade-in-section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+  will-change: opacity, transform;
+}
+
+/* Custom override for the first content section */
+.firstSection {
+  min-height: auto; /* Remove full viewport height requirement */
+  padding: 2rem 0; /* Add vertical padding if needed */
 }
 
 .section {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 2rem;
-}
-
-/* Section where text is on the left */
-.textLeft {
-  flex: 1;
-  padding: 1rem;
-}
-
-/* Section where image is on the right */
-.imageRight {
-  flex: 1;
-  padding: 1rem;
-}
-
-/* Section where image is on the left */
-.imageLeft {
-  flex: 1;
-  padding: 1rem;
-}
-
-/* Section where button is on the right */
-.buttonRight {
-  flex: 1;
-  padding: 1rem;
-  display: flex;
-  justify-content: flex-end;
-}
-
-/* Ensure images are responsive */
-.imageLeft img,
-.imageRight img {
   width: 100%;
+}
+
+.textLeft,
+.imageRight,
+.imageLeft,
+.buttonLeft {
+  padding: 1rem;
+  flex: 1;
+}
+
+/* Button container aligned to the left */
+.buttonLeft {
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* Slightly smaller images */
+.imageRight img,
+.imageLeft img {
+  width: 90%;
   height: auto;
   border-radius: 8px;
 }
 
+/* Enlarged Learn More button with dark purple tones */
 .learnMoreButton {
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  background-color: #0070f3;
+  padding: 1rem 2rem;
+  font-size: 1.25rem;
+  background-color: #3d003d;
   border: none;
   border-radius: 5px;
   color: #fff;
@@ -72,5 +110,38 @@
 }
 
 .learnMoreButton:hover {
-  background-color: #005bb5;
+  background-color: #2e002e;
 }
+
+/* Scroll Prompt styling with no background */
+.scrollPrompt {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 1rem;
+  z-index: 1000;
+  background: none;
+}
+
+/* When section is fully visible */
+.fade-in-section.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Hide scrollbar for Chrome, Safari, Opera */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+body {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
+

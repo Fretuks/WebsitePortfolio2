@@ -1,51 +1,101 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import FadeInSection from "./components/FadeInSection";
 
 export default function Home() {
+  const [showScrollPrompt, setShowScrollPrompt] = useState(false);
+  const [title, setTitle] = useState("Fretux");
+  const [phase, setPhase] = useState("normal");
+
+  // Title flicker effect: every 3 seconds, fade out, toggle title, then fade in.
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setPhase("fadeOut");
+      setTimeout(() => {
+        setTitle((prev) => (prev === "Fretux" ? "Frederik Spirgi" : "Fretux"));
+        setPhase("fadeIn");
+        setTimeout(() => {
+          setPhase("normal");
+        }, 500);
+      }, 500);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Show scroll prompt after a delay (once the title has loaded in).
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowScrollPrompt(true);
+    }, 1500); // Adjust the delay as needed
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Remove the scroll prompt permanently upon first scroll.
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollPrompt(false);
+      window.removeEventListener("scroll", handleScroll);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4 py-12">
-      {/* Header with title and introduction */}
-      <header className="text-center mb-16">
-        <h1 className="text-5xl font-bold mb-4">My Portfolio</h1>
-        <p className="text-xl text-gray-600">
-          Welcome to my personal portfolio. I am passionate about creating beautiful and efficient web experiences.
-        </p>
-      </header>
+    <div className="container">
+      {showScrollPrompt && (
+        <div className="scrollPrompt">
+          <p>Scroll subtly</p>
+        </div>
+      )}
 
-      {/* Section 1: Text on left, image on right */}
-      <section className="flex flex-col md:flex-row items-center mb-16 w-full max-w-5xl">
-        <div className="md:w-1/2 p-4">
-          <p className="text-lg text-gray-700">
-            I specialize in building responsive, dynamic web applications that deliver exceptional user experiences.
+      <FadeInSection>
+        <header className="header">
+          <h1 className={`title ${phase}`}>{title}</h1>
+          <p className="intro">
+            Welcome to my portfolio. I’m a web developer passionate about building modern, responsive applications.
           </p>
-        </div>
-        <div className="md:w-1/2 p-4 flex justify-center">
-          <Image
-            src="/project1.jpg" // Replace with your image path
-            alt="Project showcase"
-            width={500}
-            height={300}
-            className="rounded-lg shadow-lg"
-          />
-        </div>
-      </section>
+        </header>
+      </FadeInSection>
 
-      {/* Section 2: Image on left, button on right */}
-      <section className="flex flex-col md:flex-row items-center w-full max-w-5xl">
-        <div className="md:w-1/2 p-4 flex justify-center">
-          <Image
-            src="/project2.jpg" // Replace with your image path
-            alt="Another project"
-            width={500}
-            height={300}
-            className="rounded-lg shadow-lg"
-          />
-        </div>
-        <div className="md:w-1/2 p-4 flex justify-center">
-          <button className="px-8 py-4 bg-blue-600 text-white text-lg rounded-lg hover:bg-blue-700 transition">
-            Learn More
-          </button>
-        </div>
-      </section>
+      <FadeInSection>
+        <section className="section">
+          <div className="textLeft">
+            <p>
+              I specialize in creating intuitive user experiences and dynamic web solutions using Next.js, React, and modern design principles.
+            </p>
+          </div>
+          <div className="imageRight">
+            <Image
+              src="/images/portfolio1.jpg"
+              alt="Screenshot of a portfolio project"
+              width={500}
+              height={300}
+            />
+          </div>
+        </section>
+      </FadeInSection>
+
+      <FadeInSection>
+        <section className="section">
+          <div className="imageLeft">
+            <Image
+              src="/images/portfolio2.jpg"
+              alt="Another project snapshot"
+              width={500}
+              height={300}
+            />
+          </div>
+          <div className="buttonLeft">
+            <Link href="/about">
+              <button className="learnMoreButton">Learn More</button>
+            </Link>
+          </div>
+        </section>
+      </FadeInSection>
     </div>
   );
 }
