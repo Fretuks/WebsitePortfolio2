@@ -1,101 +1,101 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import {useState, useEffect} from "react";
 import Image from "next/image";
 import Link from "next/link";
 import FadeInSection from "./components/FadeInSection";
 
 export default function Home() {
-  const [showScrollPrompt, setShowScrollPrompt] = useState(false);
-  const [title, setTitle] = useState("Fretux");
-  const [phase, setPhase] = useState("normal");
+    const [showScrollPrompt, setShowScrollPrompt] = useState(false);
+    const [title, setTitle] = useState("Fretux");
+    const [phase, setPhase] = useState("normal");
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setPhase("fadeOut");
+            setTimeout(() => {
+                setTitle((prev) => (prev === "Fretux" ? "Frederik Spirgi" : "Fretux"));
+                setPhase("fadeIn");
+                setTimeout(() => {
+                    setPhase("normal");
+                }, 500);
+            }, 500);
+        }, 3000);
+        return () => clearInterval(interval);
+    }, []);
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            window.scrollTo(0, 0);
+        }
+    }, []);
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setShowScrollPrompt(true);
+        }, 1500);
 
-  // Title flicker effect: every 3 seconds, fade out, toggle title, then fade in.
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setPhase("fadeOut");
-      setTimeout(() => {
-        setTitle((prev) => (prev === "Fretux" ? "Frederik Spirgi" : "Fretux"));
-        setPhase("fadeIn");
-        setTimeout(() => {
-          setPhase("normal");
-        }, 500);
-      }, 500);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
+        const handleScroll = () => {
+            setShowScrollPrompt(false);
+            clearTimeout(timer); // Ensures the timeout is cleared if the user scrolls early
+            window.removeEventListener("scroll", handleScroll);
+        };
 
-  // Show scroll prompt after a delay (once the title has loaded in).
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowScrollPrompt(true);
-    }, 1500); // Adjust the delay as needed
-    return () => clearTimeout(timer);
-  }, []);
+        window.addEventListener("scroll", handleScroll);
 
-  // Remove the scroll prompt permanently upon first scroll.
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowScrollPrompt(false);
-      window.removeEventListener("scroll", handleScroll);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  return (
-    <div className="container">
-      {showScrollPrompt && (
-        <div className="scrollPrompt">
-          <p>Scroll subtly</p>
+        return () => {
+            clearTimeout(timer);
+            window.removeEventListener("scroll", handleScroll);
+        };
+    }, []);
+    return (
+        <div className="container">
+            {showScrollPrompt && (
+                <div className="scrollPrompt">
+                    <p>Scroll subtly</p>
+                </div>
+            )}
+            <FadeInSection>
+                <header className="header">
+                    <h1 className={`title ${phase}`}>{title}</h1>
+                    <p className="intro">
+                        Welcome to my portfolio. I’m a web developer passionate about building modern, responsive
+                        applications.
+                    </p>
+                </header>
+            </FadeInSection>
+            <FadeInSection>
+                <section className="section">
+                    <div className="textLeft">
+                        <p>
+                            I specialize in creating intuitive user experiences and dynamic web solutions using Next.js,
+                            React, and modern design principles.
+                        </p>
+                    </div>
+                    <div className="imageRight">
+                        <Image
+                            src="/images/portfolio1.jpg"
+                            alt="Screenshot of a portfolio project"
+                            width={500}
+                            height={300}
+                        />
+                    </div>
+                </section>
+            </FadeInSection>
+            <FadeInSection>
+                <section className="section">
+                    <div className="imageLeft">
+                        <Image
+                            src="/images/portfolio2.jpg"
+                            alt="Another project snapshot"
+                            width={500}
+                            height={300}
+                        />
+                    </div>
+                    <div className="buttonLeft">
+                        <Link href="/about">
+                            <button className="learnMoreButton">Learn More</button>
+                        </Link>
+                    </div>
+                </section>
+            </FadeInSection>
         </div>
-      )}
-
-      <FadeInSection>
-        <header className="header">
-          <h1 className={`title ${phase}`}>{title}</h1>
-          <p className="intro">
-            Welcome to my portfolio. I’m a web developer passionate about building modern, responsive applications.
-          </p>
-        </header>
-      </FadeInSection>
-
-      <FadeInSection>
-        <section className="section">
-          <div className="textLeft">
-            <p>
-              I specialize in creating intuitive user experiences and dynamic web solutions using Next.js, React, and modern design principles.
-            </p>
-          </div>
-          <div className="imageRight">
-            <Image
-              src="/images/portfolio1.jpg"
-              alt="Screenshot of a portfolio project"
-              width={500}
-              height={300}
-            />
-          </div>
-        </section>
-      </FadeInSection>
-
-      <FadeInSection>
-        <section className="section">
-          <div className="imageLeft">
-            <Image
-              src="/images/portfolio2.jpg"
-              alt="Another project snapshot"
-              width={500}
-              height={300}
-            />
-          </div>
-          <div className="buttonLeft">
-            <Link href="/about">
-              <button className="learnMoreButton">Learn More</button>
-            </Link>
-          </div>
-        </section>
-      </FadeInSection>
-    </div>
-  );
+    );
 }
