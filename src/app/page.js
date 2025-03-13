@@ -4,7 +4,6 @@ import {useState, useEffect} from "react";
 import Image from "next/image";
 import Link from "next/link";
 import FadeInSection from "./components/FadeInSection";
-
 export default function Home() {
     const [showScrollPrompt, setShowScrollPrompt] = useState(false);
     const [title, setTitle] = useState("Fretux");
@@ -31,15 +30,12 @@ export default function Home() {
         const timer = setTimeout(() => {
             setShowScrollPrompt(true);
         }, 1500);
-
         const handleScroll = () => {
             setShowScrollPrompt(false);
-            clearTimeout(timer); // Ensures the timeout is cleared if the user scrolls early
+            clearTimeout(timer);
             window.removeEventListener("scroll", handleScroll);
         };
-
         window.addEventListener("scroll", handleScroll);
-
         return () => {
             clearTimeout(timer);
             window.removeEventListener("scroll", handleScroll);
@@ -56,7 +52,7 @@ export default function Home() {
                 <header className="header">
                     <h1 className={`title ${phase}`}>{title}</h1>
                     <p className="intro">
-                        Welcome to my portfolio. I’m a web developer passionate about building modern, responsive
+                        Welcome to my portfolio. I’m a developer passionate about building modern and responsive
                         applications.
                     </p>
                 </header>

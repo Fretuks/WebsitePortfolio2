@@ -15,13 +15,17 @@ html {
     min-height: 100vh;
     background: linear-gradient(135deg, #000000, #1a001a);
     overflow-x: hidden;
-    overscroll-behavior: none; /* Prevents scrolling past the boundaries */
+    overscroll-behavior: none;
 }
 
 .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem;
+}
+
+.textLeft {
+    font-size: 2rem;
 }
 
 .header {
@@ -71,7 +75,6 @@ html {
     color: #cccccc;
 }
 
-/* Default fade-in section: occupies at least one full viewport */
 .fade-in-section {
     min-height: 90vh;
     display: flex;
@@ -83,10 +86,9 @@ html {
     will-change: opacity, transform;
 }
 
-/* Custom override for the first content section */
 .firstSection {
-    min-height: auto; /* Remove full viewport height requirement */
-    padding: 2rem 0; /* Add vertical padding if needed */
+    min-height: auto;
+    padding: 2rem 0;
 }
 
 .section {
@@ -102,17 +104,18 @@ html {
 .buttonLeft {
     padding: 1rem;
     flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-/* Button container aligned to the left */
 .buttonLeft {
     display: flex;
-    justify-content: center; /* Centers the button horizontally */
-    align-items: center; /* Centers vertically */
-    width: 100%; /* Ensures it takes full width */
+    justify-content: center;
+    align-items: center;
+    width: 100%;
 }
 
-/* Slightly smaller images */
 .imageRight img,
 .imageLeft img {
     width: 90%;
@@ -120,7 +123,6 @@ html {
     border-radius: 8px;
 }
 
-/* Enlarged Learn More button with dark purple tones */
 .learnMoreButton {
     padding: 1rem 2rem;
     font-size: 1.25rem;
@@ -136,7 +138,6 @@ html {
     background-color: #2e002e;
 }
 
-/* Scroll Prompt styling with no background */
 .scrollPrompt {
     position: fixed;
     bottom: 20px;
@@ -150,21 +151,39 @@ html {
     background: none;
 }
 
-/* When section is fully visible */
 .fade-in-section.is-visible {
     opacity: 1;
     transform: none;
 }
 
-/* Hide scrollbar for Chrome, Safari, Opera */
 ::-webkit-scrollbar {
     display: none;
 }
 
-/* Hide scrollbar for IE, Edge and Firefox */
 body {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+@keyframes pulseBorder {
+    0% {
+        box-shadow: 0 0 5px #4b004b;
+    }
+    50% {
+        box-shadow: 0 0 20px #600060;
+    }
+    100% {
+        box-shadow: 0 0 5px #4b004b;
+    }
+}
+
+.imageRight img,
+.imageLeft img {
+    width: 90%;
+    height: auto;
+    border-radius: 8px;
+    border: 4px solid #3d003d;
+    animation: pulseBorder 1.5s infinite alternate ease-in-out;
 }
 
 
