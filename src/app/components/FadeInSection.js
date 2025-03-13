@@ -1,50 +1,50 @@
 "use client";
 
-import { useRef, useState, useEffect } from 'react';
+import {useRef, useState, useEffect} from 'react';
 
-const FadeInSection = ({ children }) => {
-  const domRef = useRef();
-  const [hasBeenVisible, setHasBeenVisible] = useState(false);
-  const [opacity, setOpacity] = useState(0);
-  useEffect(() => {
-    const thresholds = Array.from({ length: 101 }, (_, i) => i / 100);
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.intersectionRatio >= 0.3 && !hasBeenVisible) {
-            setHasBeenVisible(true);
-            setOpacity(1);
-          } else if (!hasBeenVisible) {
-            setOpacity(entry.intersectionRatio);
-          }
-        });
-      },
-      {
-        threshold: thresholds,
-        rootMargin: "0px 0px -20% 0px",
-      }
+const FadeInSection = ({children}) => {
+    const domRef = useRef();
+    const [hasBeenVisible, setHasBeenVisible] = useState(false);
+    const [opacity, setOpacity] = useState(0);
+    useEffect(() => {
+        const thresholds = Array.from({length: 101}, (_, i) => i / 100);
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.intersectionRatio >= 0.3 && !hasBeenVisible) {
+                        setHasBeenVisible(true);
+                        setOpacity(1);
+                    } else if (!hasBeenVisible) {
+                        setOpacity(entry.intersectionRatio);
+                    }
+                });
+            },
+            {
+                threshold: thresholds,
+                rootMargin: "0px 0px -20% 0px",
+            }
+        );
+        if (domRef.current) {
+            observer.observe(domRef.current);
+        }
+        return () => {
+            observer.disconnect();
+        };
+    }, [hasBeenVisible]);
+
+    return (
+        <div
+            ref={domRef}
+            className="fade-in-section"
+            style={{
+                opacity: hasBeenVisible ? 1 : opacity,
+                transform: hasBeenVisible ? "none" : `translateY(${(1 - opacity) * 20}px)`,
+                transition: "opacity 0.3s ease-out, transform 0.3s ease-out",
+            }}
+        >
+            {children}
+        </div>
     );
-    if (domRef.current) {
-      observer.observe(domRef.current);
-    }
-    return () => {
-      observer.disconnect();
-    };
-  }, [hasBeenVisible]);
-
-  return (
-    <div
-      ref={domRef}
-      className="fade-in-section"
-      style={{
-        opacity: hasBeenVisible ? 1 : opacity,
-        transform: hasBeenVisible ? "none" : `translateY(${(1 - opacity) * 20}px)`,
-        transition: "opacity 0.3s ease-out, transform 0.3s ease-out",
-      }}
-    >
-      {children}
-    </div>
-  );
 };
 
 export default FadeInSection;
