@@ -4,6 +4,7 @@ import {useState, useEffect} from "react";
 import Image from "next/image";
 import Link from "next/link";
 import FadeInSection from "./components/FadeInSection";
+
 export default function Home() {
     const [showScrollPrompt, setShowScrollPrompt] = useState(false);
     const [title, setTitle] = useState("Fretux");
