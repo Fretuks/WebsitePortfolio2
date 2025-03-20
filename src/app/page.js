@@ -62,8 +62,7 @@ export default function Home() {
                 <section className="section">
                     <div className="textLeft">
                         <p>
-                            I specialize in creating intuitive user experiences and dynamic web solutions using Next.js,
-                            React, and modern design principles.
+                            I specialize in creating intuitive and dynamic web solutions using HTML, CSS and Javascript.
                         </p>
                     </div>
                     <div className="imageRight">
