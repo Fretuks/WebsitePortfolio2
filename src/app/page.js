@@ -62,7 +62,7 @@ export default function Home() {
                 <section className="section">
                     <div className="textLeft">
                         <p>
-                            I specialize in creating intuitive and dynamic web solutions using HTML, CSS and Javascript.
+                            I&#39;m a passionate developer exploring web, game, and backend technologies with a focus on innovation and creativity.
                         </p>
                     </div>
                     <div className="imageRight">
