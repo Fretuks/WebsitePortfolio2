@@ -9,85 +9,76 @@ export default function About() {
             content: "I discovered my passion for technology by experimenting with Scratch and creating some simple Games."
         },
         {
-            date: "2022",
-            title: "Exploring Web Development",
-            content: "Started creating my first website and got into HTML and CSS."
+            date: "2020",
+            title: "Exploring Web & Scripting",
+            content: "Started creating small websites and got into JavaScript, CSS, and working with various scripting languages."
         },
         {
-            date: "2023",
-            title: "Diving into Informatics",
-            content: "Started with Python and basic exploration of 'real' programming."
+            date: "2022",
+            title: "Diving into Game Development",
+            content: "Tried Unity and C#, building small 2D and 3D prototypes to expand my skill set."
         },
         {
             date: "2024",
             title: "Full Stack & Beyond",
-            content: "Ventured into backend (SQL, Python) and frontend using Javascript"
+            content: "Ventured into backend (SQL, Python) and continued refining my frontend abilities, always exploring new challenges."
         }
+    ];
+
+    const skills = [
+        { name: "JavaScript", level: 80, waveSpeed: "2s" },
+        { name: "Python", level: 75, waveSpeed: "2.5s" },
+        { name: "C#", level: 50, waveSpeed: "3s" },
+        { name: "SQL", level: 85, waveSpeed: "2.2s" },
+        { name: "HTML & CSS", level: 70, waveSpeed: "2.7s" },
     ];
 
     const sectionRefs = timelineData.map(() => useRef(null));
     const aboutMeRef = useRef(null);
-    const [currentSection, setCurrentSection] = useState(0);
-    const [timelineFinished, setTimelineFinished] = useState(false);
-    const [isManualScroll, setIsManualScroll] = useState(false); // Track user scrolling
     const scrollContainerRef = useRef(null);
 
+    const [currentSection, setCurrentSection] = useState(0);
+    const [timelineFinished, setTimelineFinished] = useState(false);
+
+    // Scroll to 'About Me' title and reset timeline on page load
     useEffect(() => {
         setCurrentSection(0); // Reset timeline
         setTimelineFinished(false);
 
-        // Ensure 'About Me' is visible on reload
         setTimeout(() => {
-            aboutMeRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+            aboutMeRef.current?.scrollIntoView({behavior: "smooth", block: "start"});
         }, 100);
     }, []);
 
     // Handle button navigation
     const handleButtonClick = (direction) => {
-        setIsManualScroll(false); // Ensure programmatic scrolling happens
         setCurrentSection((prev) => {
             const newSection = Math.max(0, Math.min(prev + direction, timelineData.length - 1));
             if (newSection === timelineData.length - 1) {
                 setTimelineFinished(true);
+            } else {
+                setTimelineFinished(false);
             }
+            sectionRefs[newSection]?.current?.scrollIntoView({behavior: "smooth", inline: "start"});
             return newSection;
         });
     };
 
-    // Scroll to current section (only if not manually scrolling)
-    useEffect(() => {
-        if (!isManualScroll) {
-            sectionRefs[currentSection]?.current?.scrollIntoView({behavior: "smooth", inline: "start"});
-        }
-    }, [currentSection, isManualScroll]);
-    useEffect(() => {
-        const handleScroll = () => {
-            setIsManualScroll(true);
-        };
-
-        const scrollContainer = scrollContainerRef.current;
-        if (scrollContainer) {
-            scrollContainer.addEventListener("scroll", handleScroll);
-        }
-
-        return () => {
-            if (scrollContainer) {
-                scrollContainer.removeEventListener("scroll", handleScroll);
-            }
-        };
-    }, []);
-
-    // Intersection Observer to detect when last section is fully visible
+    // Track scrolling manually and update currentSection
     useEffect(() => {
         const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
-                    if (entry.isIntersecting && entry.target === sectionRefs[timelineData.length - 1].current) {
-                        setTimelineFinished(true);
+                    if (entry.isIntersecting) {
+                        const index = sectionRefs.findIndex(ref => ref.current === entry.target);
+                        if (index !== -1) {
+                            setCurrentSection(index);
+                            setTimelineFinished(index === timelineData.length - 1);
+                        }
                     }
                 });
             },
-            {threshold: 0.8} // Increased threshold to ensure full visibility before triggering
+            {threshold: 0.6}
         );
 
         sectionRefs.forEach((ref) => {
@@ -115,7 +106,7 @@ export default function About() {
                 <h1 style={{fontSize: "2.5rem", marginBottom: "1rem"}}>About Me</h1>
                 <p style={{maxWidth: "600px", textAlign: "center"}}>
                     I’m a passionate developer always excited about new challenges.
-                    Scroll down to check out my coding journey through the years!
+                    Scroll down to learn more about me!
                 </p>
             </section>
 
@@ -195,26 +186,31 @@ export default function About() {
                 </div>
             </section>
 
+            {/* Skills Section with Liquid Progress Bars */}
             {timelineFinished && (
-                <section
-                    style={{
-                        minHeight: "100vh",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        padding: "2rem",
-                        boxSizing: "border-box",
-                    }}
-                >
-                    <h2 style={{fontSize: "2rem", marginBottom: "1rem"}}>My Skills</h2>
-                    <p style={{maxWidth: "600px", textAlign: "center"}}>
-                        By completing projects in web development, scripting, and game
-                        design, I’ve cultivated a diverse set of skills — spanning
-                        JavaScript, Python, C#, and more!
-                    </p>
+                <section style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "2rem", color: "#fff" }}>
+                    <h2 style={{ fontSize: "2rem", marginBottom: "2rem" }}>My Skills</h2>
+
+                    <div style={{ display: "flex", gap: "2rem" }}>
+                        {skills.map((skill, index) => (
+                            <div key={index} style={{ textAlign: "center" }}>
+                                <div style={{ width: "60px", height: "200px", backgroundColor: "#333", borderRadius: "10px", overflow: "hidden", position: "relative", border: "2px solid #555" }}>
+                                    <div className="liquid" style={{
+                                        width: "100%",
+                                        height: `${skill.level}%`,
+                                        position: "absolute",
+                                        bottom: 0,
+                                        background: "linear-gradient(45deg, #7400a9, #411357)",
+                                        borderTop: "4px solid rgba(255, 255, 255, 0.6)",
+                                        animation: `wave ${skill.waveSpeed} infinite ease-in-out`,
+                                    }}><p style={{ marginTop: "10px", fontSize: "1rem" }}>{skill.level}%</p></div>
+                                </div>
+                                <p style={{ marginTop: "10px", fontSize: "1rem" }}>{skill.name}</p>
+                            </div>
+                        ))}
+                    </div>
                 </section>
             )}
         </div>
-    );
+    )
 }

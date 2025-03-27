@@ -181,3 +181,15 @@ body {
     object-fit: contain;
     display: block;
 }
+
+@keyframes wave {
+    0% {
+        transform: translateY(8px);
+    }
+    50% {
+        transform: translateY(0px);
+    }
+    100% {
+        transform: translateY(8px);
+    }
+}
