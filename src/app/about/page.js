@@ -6,34 +6,39 @@ export default function About() {
         {
             date: "2018",
             title: "First Contact with Coding",
-            content: "I discovered my passion for technology by experimenting with Scratch and creating some simple Games."
+            content:
+                "I discovered my passion for technology by experimenting with Scratch and creating some simple Games.",
         },
         {
             date: "2020",
             title: "Exploring Web & Scripting",
-            content: "Started creating small websites and got into JavaScript, CSS, and working with various scripting languages."
+            content:
+                "Started creating small websites and got into JavaScript, CSS, and working with various scripting languages.",
         },
         {
             date: "2022",
             title: "Diving into Game Development",
-            content: "Tried Unity and C#, building small 2D and 3D prototypes to expand my skill set."
+            content:
+                "Tried Unity and C#, building small 2D and 3D prototypes to expand my skill set.",
         },
         {
             date: "2024",
             title: "Full Stack & Beyond",
-            content: "Ventured into backend (SQL, Python) and continued refining my frontend abilities, always exploring new challenges."
-        }
+            content:
+                "Ventured into backend (SQL, Python) and continued refining my frontend abilities, always exploring new challenges.",
+        },
     ];
 
     const skills = [
-        { name: "JavaScript", level: 80, waveSpeed: "2s" },
-        { name: "Python", level: 75, waveSpeed: "2.5s" },
-        { name: "C#", level: 50, waveSpeed: "3s" },
-        { name: "SQL", level: 85, waveSpeed: "2.2s" },
-        { name: "HTML & CSS", level: 70, waveSpeed: "2.7s" },
+        {name: "JavaScript", level: 80, waveSpeed: "2s"},
+        {name: "Python", level: 75, waveSpeed: "2.5s"},
+        {name: "C#", level: 50, waveSpeed: "3s"},
+        {name: "SQL", level: 85, waveSpeed: "2.2s"},
+        {name: "HTML & CSS", level: 70, waveSpeed: "2.7s"},
     ];
 
-    const sectionRefs = timelineData.map(() => useRef(null));
+    // Instead of mapping useRef inside a callback, we create one ref for all sections:
+    const sectionRefs = useRef([]);
     const aboutMeRef = useRef(null);
     const scrollContainerRef = useRef(null);
 
@@ -54,12 +59,8 @@ export default function About() {
     const handleButtonClick = (direction) => {
         setCurrentSection((prev) => {
             const newSection = Math.max(0, Math.min(prev + direction, timelineData.length - 1));
-            if (newSection === timelineData.length - 1) {
-                setTimelineFinished(true);
-            } else {
-                setTimelineFinished(false);
-            }
-            sectionRefs[newSection]?.current?.scrollIntoView({behavior: "smooth", inline: "start"});
+            setTimelineFinished(newSection === timelineData.length - 1);
+            sectionRefs.current[newSection]?.scrollIntoView({behavior: "smooth", inline: "start"});
             return newSection;
         });
     };
@@ -70,7 +71,7 @@ export default function About() {
             (entries) => {
                 entries.forEach((entry) => {
                     if (entry.isIntersecting) {
-                        const index = sectionRefs.findIndex(ref => ref.current === entry.target);
+                        const index = sectionRefs.current.findIndex((el) => el === entry.target);
                         if (index !== -1) {
                             setCurrentSection(index);
                             setTimelineFinished(index === timelineData.length - 1);
@@ -81,12 +82,12 @@ export default function About() {
             {threshold: 0.6}
         );
 
-        sectionRefs.forEach((ref) => {
-            if (ref.current) observer.observe(ref.current);
+        sectionRefs.current.forEach((el) => {
+            if (el) observer.observe(el);
         });
 
         return () => observer.disconnect();
-    }, [sectionRefs]);
+    }, [timelineData.length]);
 
     return (
         <div style={{width: "100%", overflowX: "hidden"}}>
@@ -166,7 +167,8 @@ export default function About() {
                     {timelineData.map((item, index) => (
                         <section
                             key={index}
-                            ref={sectionRefs[index]}
+                            // Assign each section to sectionRefs.current array
+                            ref={(el) => (sectionRefs.current[index] = el)}
                             style={{
                                 flex: "0 0 100%",
                                 scrollSnapAlign: "center",
@@ -188,24 +190,49 @@ export default function About() {
 
             {/* Skills Section with Liquid Progress Bars */}
             {timelineFinished && (
-                <section style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "2rem", color: "#fff" }}>
-                    <h2 style={{ fontSize: "2rem", marginBottom: "2rem" }}>My Skills</h2>
+                <section
+                    style={{
+                        minHeight: "100vh",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        padding: "2rem",
+                        color: "#fff",
+                    }}
+                >
+                    <h2 style={{fontSize: "2rem", marginBottom: "2rem"}}>My Skills</h2>
 
-                    <div style={{ display: "flex", gap: "2rem" }}>
+                    <div style={{display: "flex", gap: "2rem"}}>
                         {skills.map((skill, index) => (
-                            <div key={index} style={{ textAlign: "center" }}>
-                                <div style={{ width: "60px", height: "200px", backgroundColor: "#333", borderRadius: "10px", overflow: "hidden", position: "relative", border: "2px solid #555" }}>
-                                    <div className="liquid" style={{
-                                        width: "100%",
-                                        height: `${skill.level}%`,
-                                        position: "absolute",
-                                        bottom: 0,
-                                        background: "linear-gradient(45deg, #7400a9, #411357)",
-                                        borderTop: "4px solid rgba(255, 255, 255, 0.6)",
-                                        animation: `wave ${skill.waveSpeed} infinite ease-in-out`,
-                                    }}><p style={{ marginTop: "10px", fontSize: "1rem" }}>{skill.level}%</p></div>
+                            <div key={index} style={{textAlign: "center"}}>
+                                <div
+                                    style={{
+                                        width: "60px",
+                                        height: "200px",
+                                        backgroundColor: "#333",
+                                        borderRadius: "10px",
+                                        overflow: "hidden",
+                                        position: "relative",
+                                        border: "2px solid #555",
+                                    }}
+                                >
+                                    <div
+                                        className="liquid"
+                                        style={{
+                                            width: "100%",
+                                            height: `${skill.level}%`,
+                                            position: "absolute",
+                                            bottom: 0,
+                                            background: "linear-gradient(45deg, #7400a9, #411357)",
+                                            borderTop: "4px solid rgba(255, 255, 255, 0.6)",
+                                            animation: `wave ${skill.waveSpeed} infinite ease-in-out`,
+                                        }}
+                                    >
+                                        <p style={{marginTop: "10px", fontSize: "1rem"}}>{skill.level}%</p>
+                                    </div>
                                 </div>
-                                <p style={{ marginTop: "10px", fontSize: "1rem" }}>{skill.name}</p>
+                                <p style={{marginTop: "10px", fontSize: "1rem"}}>{skill.name}</p>
                             </div>
                         ))}
                     </div>
