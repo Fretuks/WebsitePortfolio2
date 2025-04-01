@@ -37,25 +37,18 @@ export default function About() {
         {name: "HTML & CSS", level: 70, waveSpeed: "2.7s"},
     ];
 
-    // Instead of mapping useRef inside a callback, we create one ref for all sections:
     const sectionRefs = useRef([]);
     const aboutMeRef = useRef(null);
     const scrollContainerRef = useRef(null);
-
     const [currentSection, setCurrentSection] = useState(0);
     const [timelineFinished, setTimelineFinished] = useState(false);
-
-    // Scroll to 'About Me' title and reset timeline on page load
     useEffect(() => {
-        setCurrentSection(0); // Reset timeline
+        setCurrentSection(0);
         setTimelineFinished(false);
-
         setTimeout(() => {
             aboutMeRef.current?.scrollIntoView({behavior: "smooth", block: "start"});
         }, 100);
     }, []);
-
-    // Handle button navigation
     const handleButtonClick = (direction) => {
         setCurrentSection((prev) => {
             const newSection = Math.max(0, Math.min(prev + direction, timelineData.length - 1));
@@ -64,8 +57,6 @@ export default function About() {
             return newSection;
         });
     };
-
-    // Track scrolling manually and update currentSection
     useEffect(() => {
         const observer = new IntersectionObserver(
             (entries) => {
@@ -81,14 +72,11 @@ export default function About() {
             },
             {threshold: 0.6}
         );
-
         sectionRefs.current.forEach((el) => {
             if (el) observer.observe(el);
         });
-
         return () => observer.disconnect();
     }, [timelineData.length]);
-
     return (
         <div style={{width: "100%", overflowX: "hidden"}}>
             {/* About Me Section */}
@@ -110,7 +98,6 @@ export default function About() {
                     Scroll down to learn more about me!
                 </p>
             </section>
-
             {/* Timeline Section */}
             <section style={{position: "relative", height: "100vh", overflowY: "hidden"}}>
                 {currentSection > 0 && (
@@ -167,7 +154,6 @@ export default function About() {
                     {timelineData.map((item, index) => (
                         <section
                             key={index}
-                            // Assign each section to sectionRefs.current array
                             ref={(el) => (sectionRefs.current[index] = el)}
                             style={{
                                 flex: "0 0 100%",
@@ -187,8 +173,7 @@ export default function About() {
                     ))}
                 </div>
             </section>
-
-            {/* Skills Section with Liquid Progress Bars */}
+            {/* Skills Section*/}
             {timelineFinished && (
                 <section
                     style={{
@@ -202,7 +187,6 @@ export default function About() {
                     }}
                 >
                     <h2 style={{fontSize: "2rem", marginBottom: "2rem"}}>My Skills</h2>
-
                     <div style={{display: "flex", gap: "2rem"}}>
                         {skills.map((skill, index) => (
                             <div key={index} style={{textAlign: "center"}}>
