@@ -10,17 +10,21 @@ export default function Home() {
     const [title, setTitle] = useState("Fretux");
     const [phase, setPhase] = useState("normal");
     useEffect(() => {
+        let fadeTimeout;
         const interval = setInterval(() => {
             setPhase("fadeOut");
-            setTimeout(() => {
-                setTitle((prev) => (prev === "Fretux" ? "Frederik Spirgi" : "Fretux"));
+            fadeTimeout = setTimeout(() => {
+                setTitle(prev => prev === "Fretux" ? "Frederik Spirgi" : "Fretux");
                 setPhase("fadeIn");
-                setTimeout(() => {
-                    setPhase("normal");
-                }, 500);
+
+                fadeTimeout = setTimeout(() => setPhase("normal"), 500);
             }, 500);
         }, 3000);
-        return () => clearInterval(interval);
+
+        return () => {
+            clearInterval(interval);
+            clearTimeout(fadeTimeout);
+        };
     }, []);
     useEffect(() => {
         if (typeof window !== "undefined") {
@@ -62,7 +66,8 @@ export default function Home() {
                 <section className="section">
                     <div className="textLeft">
                         <p>
-                            I&#39;m a passionate developer exploring web, game, and backend technologies with a focus on innovation and creativity.
+                            I&#39;m a passionate developer exploring web, game, and backend technologies with a focus on
+                            innovation and creativity.
                         </p>
                     </div>
                     <div className="imageRight">

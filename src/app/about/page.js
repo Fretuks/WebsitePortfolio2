@@ -1,5 +1,6 @@
 "use client"
 import {useRef, useState, useEffect} from "react";
+import Link from "next/link";
 
 export default function About() {
     const timelineData = [
@@ -149,6 +150,8 @@ export default function About() {
                         width: "100%",
                         height: "100%",
                         scrollBehavior: "smooth",
+                        scrollbarWidth: "none", // Firefox
+                        msOverflowStyle: "none", // IE/Edge
                     }}
                 >
                     {timelineData.map((item, index) => (
@@ -219,6 +222,23 @@ export default function About() {
                                 <p style={{marginTop: "10px", fontSize: "1rem"}}>{skill.name}</p>
                             </div>
                         ))}
+                    </div>
+                    <div style={{marginTop: "3rem"}}>
+                        <Link href="/projects">
+                            <button
+                                className="learnMoreButton"
+                                style={{
+                                    padding: "1rem 2rem",
+                                    fontSize: "1.25rem",
+                                    border: "none",
+                                    borderRadius: "5px",
+                                    color: "#fff",
+                                    cursor: "pointer",
+                                }}
+                            >
+                                View Projects
+                            </button>
+                        </Link>
                     </div>
                 </section>
             )}
