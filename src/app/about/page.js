@@ -11,32 +11,64 @@ export default function About() {
                 "I discovered my passion for technology by experimenting with Scratch and creating some simple Games.",
         },
         {
-            date: "2020",
+            date: "2022",
             title: "Exploring Web & Scripting",
             content:
-                "Started creating small websites and got into JavaScript, CSS, and working with various scripting languages.",
+                "Started creating small websites and got into HTML, CSS",
         },
         {
             date: "2022",
-            title: "Diving into Game Development",
+            title: "Raspberry Pi & Python",
             content:
-                "Tried Unity and C#, building small 2D and 3D prototypes to expand my skill set.",
+                "Created some simple Python scripts for my Raspberry Pi, experimenting with the Raspberry Pi OS",
         },
         {
             date: "2024",
             title: "Full Stack & Beyond",
             content:
-                "Ventured into backend (SQL, Python) and continued refining my frontend abilities, always exploring new challenges.",
+                "Ventured into backend (SQL, Python, Javascript, Java) and continued refining my frontend abilities.",
         },
     ];
 
     const skills = [
-        {name: "JavaScript", level: 80, waveSpeed: "2s"},
-        {name: "Python", level: 75, waveSpeed: "2.5s"},
-        {name: "C#", level: 50, waveSpeed: "3s"},
-        {name: "SQL", level: 85, waveSpeed: "2.2s"},
-        {name: "HTML & CSS", level: 70, waveSpeed: "2.7s"},
+        {
+            name: "JavaScript",
+            level: 80,
+            waveSpeed: "2s",
+            progression: [0, 30, 60, 80],
+        },
+        {
+            name: "Python",
+            level: 75,
+            waveSpeed: "2.5s",
+            progression: [10, 25, 50, 75],
+        },
+        {
+            name: "Java",
+            level: 50,
+            waveSpeed: "3s",
+            progression: [0, 0, 0, 60],
+        },
+        {
+            name: "SQL",
+            level: 85,
+            waveSpeed: "2.2s",
+            progression: [0, 0, 0, 85],
+        },
+        {
+            name: "HTML & CSS",
+            level: 70,
+            waveSpeed: "2.7s",
+            progression: [0, 30, 50, 80],
+        },
     ];
+
+    const getSkillLabel = (level) => {
+        if (level < 25) return "Beginner";
+        if (level < 50) return "Intermediate";
+        if (level < 75) return "Advanced";
+        return "Expert";
+    };
 
     const sectionRefs = useRef([]);
     const aboutMeRef = useRef(null);
@@ -62,12 +94,16 @@ export default function About() {
         const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        const index = sectionRefs.current.findIndex((el) => el === entry.target);
-                        if (index !== -1) {
-                            setCurrentSection(index);
-                            setTimelineFinished(index === timelineData.length - 1);
-                        }
+                    const index = sectionRefs.current.findIndex((el) => el === entry.target);
+                    if (entry.isIntersecting && index !== -1) {
+                        setCurrentSection(index);
+                    }
+                    if (
+                        entry.isIntersecting &&
+                        index === timelineData.length - 1 &&
+                        entry.intersectionRatio >= 0.8
+                    ) {
+                        setTimelineFinished(true);
                     }
                 });
             },
@@ -150,98 +186,111 @@ export default function About() {
                         width: "100%",
                         height: "100%",
                         scrollBehavior: "smooth",
-                        scrollbarWidth: "none", // Firefox
-                        msOverflowStyle: "none", // IE/Edge
+                        scrollbarWidth: "none",
+                        msOverflowStyle: "none",
                     }}
                 >
-                    {timelineData.map((item, index) => (
-                        <section
-                            key={index}
-                            ref={(el) => (sectionRefs.current[index] = el)}
-                            style={{
-                                flex: "0 0 100%",
-                                scrollSnapAlign: "center",
-                                display: "flex",
-                                flexDirection: "column",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                padding: "2rem",
-                                boxSizing: "border-box",
-                            }}
-                        >
-                            <h2 style={{marginBottom: "1rem"}}>{item.title}</h2>
-                            <h3 style={{marginBottom: "1rem"}}>{item.date}</h3>
-                            <p style={{maxWidth: "600px", textAlign: "center"}}>{item.content}</p>
-                        </section>
-                    ))}
-                </div>
-            </section>
-            {/* Skills Section*/}
-            {timelineFinished && (
-                <section
-                    style={{
-                        minHeight: "100vh",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        padding: "2rem",
-                        color: "#fff",
-                    }}
-                >
-                    <h2 style={{fontSize: "2rem", marginBottom: "2rem"}}>My Skills</h2>
-                    <div style={{display: "flex", gap: "2rem"}}>
-                        {skills.map((skill, index) => (
-                            <div key={index} style={{textAlign: "center"}}>
-                                <div
-                                    style={{
-                                        width: "60px",
-                                        height: "200px",
-                                        backgroundColor: "#333",
-                                        borderRadius: "10px",
-                                        overflow: "hidden",
-                                        position: "relative",
-                                        border: "2px solid #555",
-                                    }}
-                                >
-                                    <div
-                                        className="liquid"
-                                        style={{
-                                            width: "100%",
-                                            height: `${skill.level}%`,
-                                            position: "absolute",
-                                            bottom: 0,
-                                            background: "linear-gradient(45deg, #7400a9, #411357)",
-                                            borderTop: "4px solid rgba(255, 255, 255, 0.6)",
-                                            animation: `wave ${skill.waveSpeed} infinite ease-in-out`,
-                                        }}
-                                    >
-                                        <p style={{marginTop: "10px", fontSize: "1rem"}}>{skill.level}%</p>
+                    {timelineData.map((item, index) => {
+                        const adjustedSkills = skills.map((s) => {
+                            const stepLevel = s.progression?.[index] ?? 0;
+                            return {
+                                ...s,
+                                level: Math.floor((s.level * stepLevel) / 100),
+                            };
+                        });
+                        return (
+                            <section
+                                key={index}
+                                ref={(el) => (sectionRefs.current[index] = el)}
+                                style={{
+                                    flex: "0 0 100%",
+                                    scrollSnapAlign: "center",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    padding: "2rem",
+                                    boxSizing: "border-box",
+                                }}
+                            >
+                                <h2 style={{marginBottom: "1rem"}}>{item.title}</h2>
+                                <h3 style={{marginBottom: "1rem"}}>{item.date}</h3>
+                                <p style={{maxWidth: "600px", textAlign: "center", marginBottom: "2rem"}}>
+                                    {item.content}
+                                </p>
+
+                                {/* SKILLS: show per stage */}
+                                <div style={{display: "flex", gap: "2rem"}}>
+                                    <div style={{
+                                        display: "flex",
+                                        gap: "2rem",
+                                        flexWrap: "wrap",
+                                        justifyContent: "center"
+                                    }}>
+                                        {adjustedSkills.filter((s) => s.level > 0).map((skill, sIndex) => (
+                                            <div
+                                                key={`${skill.name}-${index}`}
+                                                className={currentSection === index ? "skill-card animate-skill" : "skill-card"}
+                                                style={{
+                                                    textAlign: "center",
+                                                    width: "120px",
+                                                    animationDelay: `${sIndex * 100}ms`,
+                                                    animationFillMode: "both",
+                                                }}
+                                            >
+                                                <p style={{
+                                                    fontSize: "1.1rem",
+                                                    fontWeight: "bold",
+                                                    marginBottom: "0.5rem"
+                                                }}>
+                                                    {skill.name}
+                                                </p>
+                                                <div
+                                                    style={{
+                                                        padding: "0.5rem 1rem",
+                                                        backgroundColor: "#1a001a",
+                                                        border: "2px solid #3d003d",
+                                                        borderRadius: "10px",
+                                                        fontSize: "1rem",
+                                                        color: "#fff",
+                                                    }}
+                                                >
+                                                    {getSkillLabel(skill.level)}
+                                                </div>
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
-                                <p style={{marginTop: "10px", fontSize: "1rem"}}>{skill.name}</p>
-                            </div>
-                        ))}
-                    </div>
-                    <div style={{marginTop: "3rem"}}>
+                            </section>
+                        );
+                    })}
+                </div>
+                {/* End of scroll container */}
+                {timelineFinished && (
+                    <div style={{marginTop: "3rem", textAlign: "center", width: "100%"}}>
                         <Link href="/projects">
                             <button
                                 className="learnMoreButton"
                                 style={{
                                     padding: "1rem 2rem",
                                     fontSize: "1.25rem",
+                                    backgroundColor: "#3d003d",
                                     border: "none",
                                     borderRadius: "5px",
                                     color: "#fff",
                                     cursor: "pointer",
+                                    transition: "background-color 0.3s ease",
                                 }}
+                                onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#2e002e")}
+                                onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#3d003d")}
                             >
                                 View Projects
                             </button>
                         </Link>
                     </div>
-                </section>
-            )}
+                )}
+            </section>
         </div>
     )
 }
+
