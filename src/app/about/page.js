@@ -72,9 +72,11 @@ export default function About() {
 
     const sectionRefs = useRef([]);
     const aboutMeRef = useRef(null);
+    const buttonSectionRef = useRef(null);
     const scrollContainerRef = useRef(null);
     const [currentSection, setCurrentSection] = useState(0);
     const [timelineFinished, setTimelineFinished] = useState(false);
+    const [showScrollPrompt, setShowScrollPrompt] = useState(false);
     useEffect(() => {
         setCurrentSection(0);
         setTimelineFinished(false);
@@ -82,6 +84,26 @@ export default function About() {
             aboutMeRef.current?.scrollIntoView({behavior: "smooth", block: "start"});
         }, 100);
     }, []);
+    useEffect(() => {
+        let scrollListener;
+
+        if (timelineFinished) {
+            setShowScrollPrompt(true);
+
+            scrollListener = () => {
+                setShowScrollPrompt(false);
+                window.removeEventListener("scroll", scrollListener);
+            };
+
+            window.addEventListener("scroll", scrollListener);
+        }
+
+        return () => {
+            if (scrollListener) {
+                window.removeEventListener("scroll", scrollListener);
+            }
+        };
+    }, [timelineFinished]);
     const handleButtonClick = (direction) => {
         setCurrentSection((prev) => {
             const newSection = Math.max(0, Math.min(prev + direction, timelineData.length - 1));
@@ -115,7 +137,12 @@ export default function About() {
         return () => observer.disconnect();
     }, [timelineData.length]);
     return (
-        <div style={{width: "100%", overflowX: "hidden"}}>
+        // Ändern Sie den äußeren Container-Style
+        <div style={{
+            width: "100%",
+            position: "relative", // Hinzugefügt
+            overflowX: "hidden"
+        }}>
             {/* About Me Section */}
             <section
                 ref={aboutMeRef}
@@ -136,60 +163,9 @@ export default function About() {
                 </p>
             </section>
             {/* Timeline Section */}
-            <section style={{position: "relative", height: "100vh", overflowY: "hidden"}}>
-                {currentSection > 0 && (
-                    <button
-                        onClick={() => handleButtonClick(-1)}
-                        style={{
-                            position: "absolute",
-                            top: "50%",
-                            left: "1rem",
-                            transform: "translateY(-50%)",
-                            zIndex: 10,
-                            backgroundColor: "#333",
-                            color: "#fff",
-                            border: "none",
-                            padding: "0.75rem 1rem",
-                            cursor: "pointer",
-                            borderRadius: "4px",
-                        }}
-                    >
-                        &larr;
-                    </button>
-                )}
-                {currentSection < timelineData.length - 1 && (
-                    <button
-                        onClick={() => handleButtonClick(1)}
-                        style={{
-                            position: "absolute",
-                            top: "50%",
-                            right: "1rem",
-                            transform: "translateY(-50%)",
-                            zIndex: 10,
-                            backgroundColor: "#333",
-                            color: "#fff",
-                            border: "none",
-                            padding: "0.75rem 1rem",
-                            cursor: "pointer",
-                            borderRadius: "4px",
-                        }}
-                    >
-                        &rarr;
-                    </button>
-                )}
-                <div
-                    ref={scrollContainerRef}
-                    style={{
-                        display: "flex",
-                        overflowX: "auto",
-                        scrollSnapType: "x mandatory",
-                        width: "100%",
-                        height: "100%",
-                        scrollBehavior: "smooth",
-                        scrollbarWidth: "none",
-                        msOverflowStyle: "none",
-                    }}
-                >
+            <section style={{ position: "relative", height: "100vh", overflowY: "hidden" }}>
+                {/* Navigation buttons and timeline content here */}
+                <div ref={scrollContainerRef} style={{ display: "flex", overflowX: "auto", scrollSnapType: "x mandatory", width: "100%", height: "100%", scrollBehavior: "smooth", scrollbarWidth: "none", msOverflowStyle: "none" }}>
                     {timelineData.map((item, index) => {
                         const adjustedSkills = skills.map((s) => {
                             const stepLevel = s.progression?.[index] ?? 0;
@@ -213,84 +189,82 @@ export default function About() {
                                     boxSizing: "border-box",
                                 }}
                             >
-                                <h2 style={{marginBottom: "1rem"}}>{item.title}</h2>
-                                <h3 style={{marginBottom: "1rem"}}>{item.date}</h3>
-                                <p style={{maxWidth: "600px", textAlign: "center", marginBottom: "2rem"}}>
-                                    {item.content}
-                                </p>
-
-                                {/* SKILLS: show per stage */}
-                                <div style={{display: "flex", gap: "2rem"}}>
-                                    <div style={{
-                                        display: "flex",
-                                        gap: "2rem",
-                                        flexWrap: "wrap",
-                                        justifyContent: "center"
-                                    }}>
-                                        {adjustedSkills.filter((s) => s.level > 0).map((skill, sIndex) => (
-                                            <div
-                                                key={`${skill.name}-${index}`}
-                                                className={currentSection === index ? "skill-card animate-skill" : "skill-card"}
-                                                style={{
-                                                    textAlign: "center",
-                                                    width: "120px",
-                                                    animationDelay: `${sIndex * 100}ms`,
-                                                    animationFillMode: "both",
-                                                }}
-                                            >
-                                                <p style={{
-                                                    fontSize: "1.1rem",
-                                                    fontWeight: "bold",
-                                                    marginBottom: "0.5rem"
-                                                }}>
-                                                    {skill.name}
-                                                </p>
-                                                <div
-                                                    style={{
-                                                        padding: "0.5rem 1rem",
-                                                        backgroundColor: "#1a001a",
-                                                        border: "2px solid #3d003d",
-                                                        borderRadius: "10px",
-                                                        fontSize: "1rem",
-                                                        color: "#fff",
-                                                    }}
-                                                >
-                                                    {getSkillLabel(skill.level)}
-                                                </div>
+                                <h2>{item.title}</h2>
+                                <h3>{item.date}</h3>
+                                <p>{item.content}</p>
+                                <div style={{ display: "flex", gap: "2rem", flexWrap: "wrap", justifyContent: "center" }}>
+                                    {adjustedSkills.filter((s) => s.level > 0).map((skill, sIndex) => (
+                                        <div
+                                            key={`${skill.name}-${index}`}
+                                            className={currentSection === index ? "skill-card animate-skill" : "skill-card"}
+                                            style={{ textAlign: "center", width: "120px", animationDelay: `${sIndex * 100}ms`, animationFillMode: "both" }}
+                                        >
+                                            <p style={{ fontWeight: "bold" }}>{skill.name}</p>
+                                            <div style={{ padding: "0.5rem 1rem", backgroundColor: "#1a001a", border: "2px solid #3d003d", borderRadius: "10px", color: "#fff" }}>
+                                                {getSkillLabel(skill.level)}
                                             </div>
-                                        ))}
-                                    </div>
+                                        </div>
+                                    ))}
                                 </div>
                             </section>
                         );
                     })}
                 </div>
-                {/* End of scroll container */}
-                {timelineFinished && (
-                    <div style={{marginTop: "3rem", textAlign: "center", width: "100%"}}>
-                        <Link href="/projects">
-                            <button
-                                className="learnMoreButton"
-                                style={{
-                                    padding: "1rem 2rem",
-                                    fontSize: "1.25rem",
-                                    backgroundColor: "#3d003d",
-                                    border: "none",
-                                    borderRadius: "5px",
-                                    color: "#fff",
-                                    cursor: "pointer",
-                                    transition: "background-color 0.3s ease",
-                                }}
-                                onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#2e002e")}
-                                onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#3d003d")}
-                            >
-                                View Projects
-                            </button>
-                        </Link>
-                    </div>
+
+                {currentSection > 0 && (
+                    <button onClick={() => handleButtonClick(-1)} style={{ position: "absolute", top: "50%", left: "1rem", transform: "translateY(-50%)", zIndex: 10, backgroundColor: "#333", color: "#fff", border: "none", padding: "0.75rem 1rem", cursor: "pointer", borderRadius: "4px" }}>
+                        &larr;
+                    </button>
+                )}
+                {currentSection < timelineData.length - 1 && (
+                    <button onClick={() => handleButtonClick(1)} style={{ position: "absolute", top: "50%", right: "1rem", transform: "translateY(-50%)", zIndex: 10, backgroundColor: "#333", color: "#fff", border: "none", padding: "0.75rem 1rem", cursor: "pointer", borderRadius: "4px" }}>
+                        &rarr;
+                    </button>
                 )}
             </section>
+            {timelineFinished && showScrollPrompt && (
+                <div className="scrollPrompt">
+                    ⬇ Scroll down to continue ⬇
+                </div>
+            )}
+            {/* FINAL BUTTON SECTION - MOVED OUTSIDE */}
+            {timelineFinished && (
+                // Fügen Sie dem Button-Section einen z-Index hinzu
+                <section
+                    ref={buttonSectionRef}
+                    style={{
+                        minHeight: "100vh",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        flexDirection: "column",
+                        padding: "2rem",
+                        boxSizing: "border-box",
+                        position: "relative", // Hinzugefügt
+                        zIndex: 1 // Hinzugefügt
+                    }}
+                >
+                    <Link href="/projects">
+                        <button
+                            className="learnMoreButton"
+                            style={{
+                                padding: "1rem 2rem",
+                                fontSize: "1.25rem",
+                                backgroundColor: "#3d003d",
+                                border: "none",
+                                borderRadius: "5px",
+                                color: "#fff",
+                                cursor: "pointer",
+                                transition: "background-color 0.3s ease",
+                            }}
+                            onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#2e002e")}
+                            onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#3d003d")}
+                        >
+                            View Projects
+                        </button>
+                    </Link>
+                </section>
+            )}
         </div>
     )
 }
-
