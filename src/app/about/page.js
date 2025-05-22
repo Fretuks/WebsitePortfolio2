@@ -1,6 +1,7 @@
 "use client"
 import {useRef, useState, useEffect} from "react";
 import Link from "next/link";
+import FadeInSection from "@/app/components/FadeInSection";
 
 export default function About() {
     const timelineData = [
@@ -81,7 +82,7 @@ export default function About() {
         setCurrentSection(0);
         setTimelineFinished(false);
         setTimeout(() => {
-            aboutMeRef.current?.scrollIntoView({behavior: "smooth", block: "start"});
+            window.scrollTo({top: 0, behavior: "smooth"});
         }, 100);
     }, []);
     useEffect(() => {
@@ -143,29 +144,39 @@ export default function About() {
             position: "relative", // Hinzugefügt
             overflowX: "hidden"
         }}>
-            {/* About Me Section */}
-            <section
-                ref={aboutMeRef}
-                style={{
-                    minHeight: "100vh",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    padding: "2rem",
-                    boxSizing: "border-box",
-                }}
-            >
-                <h1 style={{fontSize: "2.5rem", marginBottom: "1rem"}}>About Me</h1>
-                <p style={{maxWidth: "600px", textAlign: "center"}}>
-                    I’m a passionate developer always excited about new challenges.
-                    Scroll down to learn more about me!
-                </p>
-            </section>
+            <FadeInSection>
+                <section
+                    ref={aboutMeRef}
+                    style={{
+                        minHeight: "100vh",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        padding: "2rem",
+                        boxSizing: "border-box",
+                    }}
+                >
+                    <h1 style={{fontSize: "2.5rem", marginBottom: "1rem"}}>About Me</h1>
+                    <p style={{maxWidth: "600px", textAlign: "center"}}>
+                        I’m a passionate developer always excited about new challenges.
+                        Scroll down to learn more about me!
+                    </p>
+                </section>
+            </FadeInSection>
             {/* Timeline Section */}
-            <section style={{ position: "relative", height: "100vh", overflowY: "hidden" }}>
+            <section style={{position: "relative", height: "100vh", overflowY: "hidden"}}>
                 {/* Navigation buttons and timeline content here */}
-                <div ref={scrollContainerRef} style={{ display: "flex", overflowX: "auto", scrollSnapType: "x mandatory", width: "100%", height: "100%", scrollBehavior: "smooth", scrollbarWidth: "none", msOverflowStyle: "none" }}>
+                <div ref={scrollContainerRef} style={{
+                    display: "flex",
+                    overflowX: "auto",
+                    scrollSnapType: "x mandatory",
+                    width: "100%",
+                    height: "100%",
+                    scrollBehavior: "smooth",
+                    scrollbarWidth: "none",
+                    msOverflowStyle: "none"
+                }}>
                     {timelineData.map((item, index) => {
                         const adjustedSkills = skills.map((s) => {
                             const stepLevel = s.progression?.[index] ?? 0;
@@ -192,15 +203,26 @@ export default function About() {
                                 <h2>{item.title}</h2>
                                 <h3>{item.date}</h3>
                                 <p>{item.content}</p>
-                                <div style={{ display: "flex", gap: "2rem", flexWrap: "wrap", justifyContent: "center" }}>
+                                <div style={{display: "flex", gap: "2rem", flexWrap: "wrap", justifyContent: "center"}}>
                                     {adjustedSkills.filter((s) => s.level > 0).map((skill, sIndex) => (
                                         <div
                                             key={`${skill.name}-${index}`}
                                             className={currentSection === index ? "skill-card animate-skill" : "skill-card"}
-                                            style={{ textAlign: "center", width: "120px", animationDelay: `${sIndex * 100}ms`, animationFillMode: "both" }}
+                                            style={{
+                                                textAlign: "center",
+                                                width: "120px",
+                                                animationDelay: `${sIndex * 100}ms`,
+                                                animationFillMode: "both"
+                                            }}
                                         >
-                                            <p style={{ fontWeight: "bold" }}>{skill.name}</p>
-                                            <div style={{ padding: "0.5rem 1rem", backgroundColor: "#1a001a", border: "2px solid #3d003d", borderRadius: "10px", color: "#fff" }}>
+                                            <p style={{fontWeight: "bold"}}>{skill.name}</p>
+                                            <div style={{
+                                                padding: "0.5rem 1rem",
+                                                backgroundColor: "#1a001a",
+                                                border: "2px solid #3d003d",
+                                                borderRadius: "10px",
+                                                color: "#fff"
+                                            }}>
                                                 {getSkillLabel(skill.level)}
                                             </div>
                                         </div>
@@ -212,12 +234,36 @@ export default function About() {
                 </div>
 
                 {currentSection > 0 && (
-                    <button onClick={() => handleButtonClick(-1)} style={{ position: "absolute", top: "50%", left: "1rem", transform: "translateY(-50%)", zIndex: 10, backgroundColor: "#333", color: "#fff", border: "none", padding: "0.75rem 1rem", cursor: "pointer", borderRadius: "4px" }}>
+                    <button onClick={() => handleButtonClick(-1)} style={{
+                        position: "absolute",
+                        top: "50%",
+                        left: "1rem",
+                        transform: "translateY(-50%)",
+                        zIndex: 10,
+                        backgroundColor: "#333",
+                        color: "#fff",
+                        border: "none",
+                        padding: "0.75rem 1rem",
+                        cursor: "pointer",
+                        borderRadius: "4px"
+                    }}>
                         &larr;
                     </button>
                 )}
                 {currentSection < timelineData.length - 1 && (
-                    <button onClick={() => handleButtonClick(1)} style={{ position: "absolute", top: "50%", right: "1rem", transform: "translateY(-50%)", zIndex: 10, backgroundColor: "#333", color: "#fff", border: "none", padding: "0.75rem 1rem", cursor: "pointer", borderRadius: "4px" }}>
+                    <button onClick={() => handleButtonClick(1)} style={{
+                        position: "absolute",
+                        top: "50%",
+                        right: "1rem",
+                        transform: "translateY(-50%)",
+                        zIndex: 10,
+                        backgroundColor: "#333",
+                        color: "#fff",
+                        border: "none",
+                        padding: "0.75rem 1rem",
+                        cursor: "pointer",
+                        borderRadius: "4px"
+                    }}>
                         &rarr;
                     </button>
                 )}

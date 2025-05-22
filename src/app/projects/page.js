@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import FadeInSection from "@/app/components/FadeInSection";
 
 const projectData = [
     {
@@ -46,22 +47,24 @@ export default function ProjectsPage() {
 
     return (
         <div className="projectContainer">
-            <div className={`projectCard ${fade ? "fade-out" : "fade-in"}`}>
-                <h2 className="projectTitle">{project.title}</h2>
-                <Image
-                    src={project.image}
-                    alt={project.title}
-                    width={600}
-                    height={400}
-                    className="projectImage"
-                />
-                <p className="projectDescription">{project.description}</p>
-                <a href={project.link} target="_blank" rel="noopener noreferrer">
-                    <button className="learnMoreButton" style={{ marginTop: "1.5rem" }}>
-                        View Project
-                    </button>
-                </a>
-            </div>
+            <FadeInSection>
+                <div className={`projectCard ${fade ? "fade-out" : "fade-in"}`}>
+                    <h2 className="projectTitle">{project.title}</h2>
+                    <Image
+                        src={project.image}
+                        alt={project.title}
+                        width={600}
+                        height={400}
+                        className="projectImage"
+                    />
+                    <p className="projectDescription">{project.description}</p>
+                    <a href={project.link} target="_blank" rel="noopener noreferrer">
+                        <button className="learnMoreButton" style={{ marginTop: "1.5rem" }}>
+                            View Project
+                        </button>
+                    </a>
+                </div>
+            </FadeInSection>
             <div className="projectNavigation">
                 <button onClick={() => handleNavigation("prev")} className="arrowButton">
                     &larr;
