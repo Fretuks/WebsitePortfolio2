@@ -235,11 +235,13 @@ body {
 
 .projectCard {
     max-width: 800px;
+    width: 100%;
     padding: 2rem;
     border-radius: 10px;
     border: 2px solid #3d003d;
     background-color: rgba(20, 0, 20, 0.4);
     transition: opacity 0.3s ease;
+    box-sizing: border-box;
 }
 
 .projectImage {
@@ -247,6 +249,9 @@ body {
     margin: 1.5rem 0;
     border: 4px solid #3d003d;
     animation: pulseBorder 1.5s infinite alternate ease-in-out;
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
 }
 
 .projectNavigation {
@@ -480,3 +485,39 @@ main {
     }
 }
 
+
+@media (max-width: 768px) {
+    .projectCard {
+        padding: 1.5rem 1rem;
+    }
+
+    .projectImage {
+        width: 100%;
+        height: auto;
+    }
+
+    .projectTitle {
+        font-size: 1.5rem;
+    }
+
+    .projectDescription {
+        font-size: 1rem;
+    }
+
+    .learnMoreButton {
+        font-size: 1rem;
+        padding: 0.75rem 1.5rem;
+    }
+
+    .arrowButton {
+        padding: 0.5rem 1rem;
+        font-size: 1.25rem;
+    }
+
+    .projectNavigation {
+        flex-direction: row;
+        gap: 1rem;
+        justify-content: center;
+        margin-top: 1.5rem;
+    }
+}

@@ -82,9 +82,11 @@ export default function About() {
         setCurrentSection(0);
         setTimelineFinished(false);
         setTimeout(() => {
+            sectionRefs.current[0]?.scrollIntoView({behavior: "auto", inline: "start"});
             window.scrollTo({top: 0, behavior: "smooth"});
         }, 100);
     }, []);
+
     useEffect(() => {
         let scrollListener;
 
@@ -105,13 +107,18 @@ export default function About() {
             }
         };
     }, [timelineFinished]);
+    const [isNavigating, setIsNavigating] = useState(false);
     const handleButtonClick = (direction) => {
+        if (isNavigating) return;
+        setIsNavigating(true);
         setCurrentSection((prev) => {
             const newSection = Math.max(0, Math.min(prev + direction, timelineData.length - 1));
-            setTimelineFinished(newSection === timelineData.length - 1);
             sectionRefs.current[newSection]?.scrollIntoView({behavior: "smooth", inline: "start"});
             return newSection;
         });
+        setTimeout(() => {
+            setIsNavigating(false);
+        }, 600);
     };
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -121,13 +128,10 @@ export default function About() {
                     if (entry.isIntersecting && index !== -1) {
                         setCurrentSection(index);
                     }
-                    if (
-                        entry.isIntersecting &&
-                        index === timelineData.length - 1 &&
-                        entry.intersectionRatio >= 0.8
-                    ) {
+                    if (entry.isIntersecting && index === timelineData.length - 1) {
                         setTimelineFinished(true);
                     }
+
                 });
             },
             {threshold: 0.6}
@@ -137,6 +141,9 @@ export default function About() {
         });
         return () => observer.disconnect();
     }, [timelineData.length]);
+    useEffect(() => {
+        setTimelineFinished(currentSection === timelineData.length - 1);
+    }, [currentSection, timelineData.length]);
     return (
         // Ändern Sie den äußeren Container-Style
         <div style={{

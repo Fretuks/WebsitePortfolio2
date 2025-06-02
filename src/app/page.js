@@ -16,11 +16,9 @@ export default function Home() {
             fadeTimeout = setTimeout(() => {
                 setTitle(prev => prev === "Fretux" ? "Frederik Spirgi" : "Fretux");
                 setPhase("fadeIn");
-
                 fadeTimeout = setTimeout(() => setPhase("normal"), 500);
             }, 500);
         }, 3000);
-
         return () => {
             clearInterval(interval);
             clearTimeout(fadeTimeout);
