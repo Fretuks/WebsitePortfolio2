@@ -145,10 +145,9 @@ export default function About() {
         setTimelineFinished(currentSection === timelineData.length - 1);
     }, [currentSection, timelineData.length]);
     return (
-        // Ändern Sie den äußeren Container-Style
         <div style={{
             width: "100%",
-            position: "relative", // Hinzugefügt
+            position: "relative",
             overflowX: "hidden"
         }}>
             <FadeInSection>

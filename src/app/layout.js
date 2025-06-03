@@ -14,8 +14,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-    title: "Fretux Portfolio",
-    description: "Frederik Spirgi – Full-stack developer",
+    title: "Fretux",
+    description: "Frederik Spirgi – Frontend developer",
+    icons: {
+        icon: "/favicon.ico",
+    },
 };
 
 export default function RootLayout({ children }) {
