@@ -23,6 +23,18 @@ const projectData = [
         image: "/images/portfolio-project3.png",
         link: "https://fretux.ch",
     },
+    {
+        title: "KnockedBack",
+        description: "A minecraft mod that revamps dying.",
+        image: "/images/KnockedBack.png",
+        link: "https://modrinth.com/mod/knockedback",
+    },
+    {
+        title: "Stalinium",
+        description: "Another minecraft mod I made with some friends, that adds the fictional 'stalinium' ore to the game.",
+        image: "/images/Stalinium.png",
+        link: "https://modrinth.com/mod/stalinium-mod",
+    },
 ];
 
 export default function ProjectsPage() {
