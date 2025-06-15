@@ -31,6 +31,17 @@ export default function About() {
         },
     ];
 
+    function getSkillEmoji(name) {
+        switch (name) {
+            case "JavaScript": return "🟨";
+            case "Python": return "🐍";
+            case "Java": return "☕";
+            case "SQL": return "💾";
+            case "HTML & CSS": return "🎨";
+            default: return "💡";
+        }
+    }
+
     const skills = [
         {
             name: "JavaScript",
@@ -163,8 +174,8 @@ export default function About() {
                         boxSizing: "border-box",
                     }}
                 >
-                    <h1 style={{fontSize: "2.5rem", marginBottom: "1rem"}}>About Me</h1>
-                    <p style={{maxWidth: "600px", textAlign: "center"}}>
+                    <h1 style={{fontSize: "3.5rem", marginBottom: "1rem"}}>About Me</h1>
+                    <p style={{maxWidth: "600px", textAlign: "center", fontWeight: "300", fontSize: "1.5rem"}}>
                         I’m a passionate developer always excited about new challenges.
                         Scroll down to learn more about me!
                     </p>
@@ -195,81 +206,46 @@ export default function About() {
                             <section
                                 key={index}
                                 ref={(el) => (sectionRefs.current[index] = el)}
-                                style={{
-                                    flex: "0 0 100%",
-                                    scrollSnapAlign: "center",
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    padding: "2rem",
-                                    boxSizing: "border-box",
-                                }}
+                                className="timeline-page"
                             >
-                                <h2>{item.title}</h2>
-                                <h3>{item.date}</h3>
-                                <p>{item.content}</p>
-                                <div style={{display: "flex", gap: "2rem", flexWrap: "wrap", justifyContent: "center"}}>
-                                    {adjustedSkills.filter((s) => s.level > 0).map((skill, sIndex) => (
-                                        <div
-                                            key={`${skill.name}-${index}`}
-                                            className={currentSection === index ? "skill-card animate-skill" : "skill-card"}
-                                            style={{
-                                                textAlign: "center",
-                                                width: "120px",
-                                                animationDelay: `${sIndex * 100}ms`,
-                                                animationFillMode: "both"
-                                            }}
-                                        >
-                                            <p style={{fontWeight: "bold"}}>{skill.name}</p>
-                                            <div style={{
-                                                padding: "0.5rem 1rem",
-                                                backgroundColor: "#1a001a",
-                                                border: "2px solid #3d003d",
-                                                borderRadius: "10px",
-                                                color: "#fff"
-                                            }}>
-                                                {getSkillLabel(skill.level)}
-                                            </div>
-                                        </div>
-                                    ))}
+                                <div className="timeline-card">
+                                    <div className="timeline-card-header">
+                                        <span className="timeline-date">{item.date}</span>
+                                        <h2>{item.title}</h2>
+                                    </div>
+                                    <p className="timeline-content">{item.content}</p>
+                                    <div className="timeline-skills">
+                                        {adjustedSkills.filter((s) => s.level > 0).map((skill, sIndex) => (
+                                            <span
+                                                key={`${skill.name}-${index}`}
+                                                className={`skill-badge skill-${getSkillLabel(skill.level).toLowerCase()}`}
+                                                style={{ animationDelay: `${sIndex * 80}ms` }}
+                                            >
+                    {getSkillEmoji(skill.name)} {skill.name}
+                                                <span className="skill-level">{getSkillLabel(skill.level)}</span>
+                </span>
+                                        ))}
+                                    </div>
                                 </div>
                             </section>
                         );
                     })}
                 </div>
-
                 {currentSection > 0 && (
-                    <button onClick={() => handleButtonClick(-1)} style={{
-                        position: "absolute",
-                        top: "50%",
-                        left: "1rem",
-                        transform: "translateY(-50%)",
-                        zIndex: 10,
-                        backgroundColor: "#333",
-                        color: "#fff",
-                        border: "none",
-                        padding: "0.75rem 1rem",
-                        cursor: "pointer",
-                        borderRadius: "4px"
-                    }}>
+                    <button
+                        onClick={() => handleButtonClick(-1)}
+                        className="timeline-arrow-btn left"
+                        aria-label="Previous"
+                    >
                         &larr;
                     </button>
                 )}
                 {currentSection < timelineData.length - 1 && (
-                    <button onClick={() => handleButtonClick(1)} style={{
-                        position: "absolute",
-                        top: "50%",
-                        right: "1rem",
-                        transform: "translateY(-50%)",
-                        zIndex: 10,
-                        backgroundColor: "#333",
-                        color: "#fff",
-                        border: "none",
-                        padding: "0.75rem 1rem",
-                        cursor: "pointer",
-                        borderRadius: "4px"
-                    }}>
+                    <button
+                        onClick={() => handleButtonClick(1)}
+                        className="timeline-arrow-btn right"
+                        aria-label="Next"
+                    >
                         &rarr;
                     </button>
                 )}

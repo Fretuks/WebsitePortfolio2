@@ -63,10 +63,15 @@ export default function Home() {
             <FadeInSection>
                 <section className="section">
                     <div className="textLeft">
-                        <p>
+                        <div>
                             I&#39;m a passionate developer exploring web, game, and backend technologies with a focus on
                             innovation and creativity.
-                        </p>
+                            <div className="buttonLeft">
+                                <Link href="/about">
+                                    <button className="learnMoreButton">Learn More</button>
+                                </Link>
+                            </div>
+                        </div>
                     </div>
                     <div className="imageRight">
                         <Image
@@ -75,23 +80,6 @@ export default function Home() {
                             width={500}
                             height={300}
                         />
-                    </div>
-                </section>
-            </FadeInSection>
-            <FadeInSection>
-                <section className="section">
-                    <div className="imageLeft">
-                        <Image
-                            src="/images/portfolio2.jpg"
-                            alt="Another project snapshot"
-                            width={500}
-                            height={300}
-                        />
-                    </div>
-                    <div className="buttonLeft">
-                        <Link href="/about">
-                            <button className="learnMoreButton">Learn More</button>
-                        </Link>
                     </div>
                 </section>
             </FadeInSection>
