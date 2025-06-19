@@ -7,7 +7,7 @@ import FadeInSection from "./components/FadeInSection";
 
 export default function Home() {
     const [showScrollPrompt, setShowScrollPrompt] = useState(false);
-    const [title, setTitle] = useState("Frederik Spirgi");
+    const [title, setTitle] = useState("Fretux");
     const [phase, setPhase] = useState("normal");
     useEffect(() => {
         let fadeTimeout;
