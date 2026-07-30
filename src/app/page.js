@@ -1,88 +1,42 @@
-"use client";
-
-import {useState, useEffect} from "react";
 import Image from "next/image";
 import Link from "next/link";
 import FadeInSection from "./components/FadeInSection";
 
 export default function Home() {
-    const [showScrollPrompt, setShowScrollPrompt] = useState(false);
-    const [title, setTitle] = useState("Fretux");
-    const [phase, setPhase] = useState("normal");
-    useEffect(() => {
-        let fadeTimeout;
-        const interval = setInterval(() => {
-            setPhase("fadeOut");
-            fadeTimeout = setTimeout(() => {
-                setTitle(prev => prev === "Fretux" ? "Frederik Spirgi" : "Fretux");
-                setPhase("fadeIn");
-                fadeTimeout = setTimeout(() => setPhase("normal"), 500);
-            }, 500);
-        }, 3000);
-        return () => {
-            clearInterval(interval);
-            clearTimeout(fadeTimeout);
-        };
-    }, []);
-    useEffect(() => {
-        if (typeof window !== "undefined") {
-            window.scrollTo(0, 0);
-        }
-    }, []);
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setShowScrollPrompt(true);
-        }, 1500);
-        const handleScroll = () => {
-            setShowScrollPrompt(false);
-            clearTimeout(timer);
-            window.removeEventListener("scroll", handleScroll);
-        };
-        window.addEventListener("scroll", handleScroll);
-        return () => {
-            clearTimeout(timer);
-            window.removeEventListener("scroll", handleScroll);
-        };
-    }, []);
     return (
-        <div className="container">
-            {showScrollPrompt && (
-                <div className="scrollPrompt">
-                    <p>Scroll subtly</p>
-                </div>
-            )}
-            <FadeInSection>
-                <header className="header">
-                    <h1 className={`title ${phase}`}>{title}</h1>
-                    <p className="intro">
-                        Welcome to my portfolio. I’m a developer passionate about building modern and responsive
-                        applications.
-                    </p>
-                </header>
-            </FadeInSection>
-            <FadeInSection>
-                <section className="section">
-                    <div className="textLeft">
-                        <div>
-                            I&#39;m a passionate developer exploring web, game, and backend technologies with a focus on
-                            innovation and creativity.
-                            <div className="buttonLeft">
-                                <Link href="/about">
-                                    <button className="learnMoreButton">Learn More</button>
-                                </Link>
-                            </div>
-                        </div>
+        <>
+            <div className="shell">
+                <section className="hero">
+                    <div>
+                        <p className="eyebrow">Developer · Digital maker</p>
+                        <h1>Code with<br/><em>character.</em></h1>
                     </div>
-                    <div className="imageRight">
-                        <Image
-                            src="/images/portfolio1.jpg"
-                            alt="Screenshot of a portfolio project"
-                            width={500}
-                            height={300}
-                        />
+                    <div className="hero-side">
+                        <div className="availability">Open to opportunities</div>
+                        <p>I’m Frederik, a developer from Switzerland creating useful, expressive experiences across web, games, and software.</p>
+                        <Link className="button" href="/projects">Explore my work</Link>
+                    </div>
+                </section>
+            </div>
+            <div className="marquee" aria-hidden="true">
+                <span>JavaScript</span><b>✦</b><span>Python</span><b>✦</b><span>Java</span><b>✦</b>
+                <span>Creative development</span><b>✦</b><span>Web experiences</span><b>✦</b><span>SQL</span>
+            </div>
+            <FadeInSection>
+                <section className="shell featured">
+                    <div className="featured-grid">
+                        <div>
+                            <p className="eyebrow">A little about me</p>
+                            <h2>Curious by default.</h2>
+                            <p>I like learning how things work, then making them work better. My projects move between polished interfaces, practical backend systems, and playful experiments.</p>
+                            <Link className="button light" href="/about">My journey</Link>
+                        </div>
+                        <div className="image-frame">
+                            <Image src="/images/portfolio1.jpg" alt="A featured development project" fill sizes="(max-width: 800px) 100vw, 60vw"/>
+                        </div>
                     </div>
                 </section>
             </FadeInSection>
-        </div>
+        </>
     );
 }
