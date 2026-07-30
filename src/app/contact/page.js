@@ -12,7 +12,7 @@ export default function ContactPage() {
                 <div className="contact-row"><span>Name</span><strong>Frederik Spirgi</strong></div>
                 <div className="contact-row"><span>Based in</span><strong>Switzerland</strong></div>
                 <div className="contact-row"><span>Email</span><a href="mailto:fretux@fretux.ch">fretux@fretux.ch</a></div>
-                <div className="contact-row"><span>Elsewhere</span><a href="https://github.com/IM23a-spirgif" target="_blank" rel="noopener noreferrer">GitHub ↗</a></div>
+                <div className="contact-row"><span>Elsewhere</span><a href="https://github.com/Fretuks" target="_blank" rel="noopener noreferrer">GitHub ↗</a></div>
             </aside>
         </div>
     );

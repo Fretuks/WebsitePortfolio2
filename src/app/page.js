@@ -19,8 +19,18 @@ export default function Home() {
                 </section>
             </div>
             <div className="marquee" aria-hidden="true">
-                <span>JavaScript</span><b>✦</b><span>Python</span><b>✦</b><span>Java</span><b>✦</b>
-                <span>Creative development</span><b>✦</b><span>Web experiences</span><b>✦</b><span>SQL</span>
+                <div className="marquee-track">
+                    {[0, 1].map(group => (
+                        <div className="marquee-group" key={group}>
+                            <span>JavaScript</span><b>✦</b>
+                            <span>Python</span><b>✦</b>
+                            <span>Java</span><b>✦</b>
+                            <span>Creative development</span><b>✦</b>
+                            <span>Web experiences</span><b>✦</b>
+                            <span>SQL</span><b>✦</b>
+                        </div>
+                    ))}
+                </div>
             </div>
             <FadeInSection>
                 <section className="shell featured">
