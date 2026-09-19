@@ -7,8 +7,8 @@ const geistSans = Geist({variable: "--font-geist-sans", subsets: ["latin"]});
 const geistMono = Geist_Mono({variable: "--font-geist-mono", subsets: ["latin"]});
 
 export const metadata = {
-    title: {default: "Fretux — Developer & digital maker", template: "%s — Fretux"},
-    description: "Portfolio of Frederik Spirgi, a developer building thoughtful digital experiences.",
+    title: {default: "Fretux | Developer & digital maker", template: "%s | Fretux"},
+    description: "Portfolio of Frederik Spirgi, software developer",
     icons: {icon: "/favicon.ico"},
 };
 

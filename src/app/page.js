@@ -38,11 +38,11 @@ export default function Home() {
                         <div>
                             <p className="eyebrow">A little about me</p>
                             <h2>Curious by default.</h2>
-                            <p>I like learning how things work, then making them work better. My projects move between polished interfaces, practical backend systems, and playful experiments.</p>
+                            <p>I like learning how things work, then making them work better. My projects move between websites, games, and other experiments.</p>
                             <Link className="button light" href="/about">My journey</Link>
                         </div>
-                        <div className="image-frame">
-                            <Image src="/images/portfolio1.jpg" alt="A featured development project" fill sizes="(max-width: 800px) 100vw, 60vw"/>
+                        <div className="image-frame landscape-frame">
+                            <Image src="/images/portfolio2.jpg" alt="Frederik standing with outstretched arms beside the sea and rocky coastal cliffs" fill sizes="(max-width: 800px) calc(100vw - 30px), (max-width: 1228px) 60vw, 710px"/>
                         </div>
                     </div>
                 </section>
